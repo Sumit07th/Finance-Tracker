@@ -1,7 +1,7 @@
 // src/components/Register.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { register } from '../services/authService'; // Ensure this path is correct
+import { register, login } from '../services/authService'; // Ensure both paths are correct
 import { useRecoilState } from 'recoil';
 import { authState } from '../recoil/atoms/authState'; // Update the import path if necessary
 
@@ -18,16 +18,23 @@ const Register = () => {
         setError('');
 
         try {
-            const response = await register({ username, email, password });
-            if (response.token) {
-                // Save token to localStorage or state management (like Recoil)
-                localStorage.setItem('token', response.token);
-                // Update the auth state
-                setAuth({ isLoggedIn: true, user: { role: 'admin', email: response.user.email } });
-                navigate('/admin-dashboard'); // Redirect to dashboard
+            // Register the user as an admin
+            const registerResponse = await register({ username, email, password, role: 'admin' });
+
+            if (registerResponse.token) {
+                // Automatically log in the newly registered user
+                const loginResponse = await login({ email, password });
+
+                if (loginResponse.token) {
+                    // Save token to localStorage or state management (like Recoil)
+                    localStorage.setItem('token', loginResponse.token);
+                    // Update the auth state
+                    setAuth({ isLoggedIn: true, user: { role: 'admin', email: loginResponse.user.email } });
+                    navigate('/admin-dashboard'); // Redirect to admin dashboard
+                }
             }
         } catch (err) {
-            setError(err.response.data.message || 'Registration failed');
+            setError(err.response?.data?.message || 'Registration failed');
         }
     };
 

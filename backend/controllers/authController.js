@@ -4,7 +4,7 @@ const { generateToken } = require("../utils/jwtUtils");
 
 exports.register = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password,role } = req.body;
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
@@ -12,14 +12,13 @@ exports.register = async (req, res) => {
         }
 
         const hashedpass = await hashedPassword(password);
-        const newUser = new User({ username, email, password: hashedpass });
+        const newUser = new User({ username, email, password: hashedpass,role: role });
         await newUser.save();
 
         const token = generateToken(newUser._id);
-        return res.status(201).json({
-            message: 'User registered successfully',
-            email: newUser.email,
-            token
+        return res.json({
+            token,
+            user: { email: newUser.email, role: newUser.role } // Return the user info
         });
     } catch (error) {
         console.error("Registration error:", error);
