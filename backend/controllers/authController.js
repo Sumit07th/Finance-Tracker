@@ -42,9 +42,9 @@ exports.login = async (req, res) => {
         }
 
         const token = generateToken(user._id);
-        return res.status(200).json({
-            email: user.email,
-            token
+        return res.json({
+            token,
+            user: { email: user.email, role: user.role } // Ensure you are returning user information
         });
     } catch (error) {
         console.error("Login error:", error);

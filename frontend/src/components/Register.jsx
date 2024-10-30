@@ -1,30 +1,35 @@
-import React,{useState,useEffect} from 'react';
-import {register} from "../services/authService.js";
-import {useNavigate} from "react-router-dom";
+// src/components/Register.jsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { register } from '../services/authService'; // Ensure this path is correct
+import { useRecoilState } from 'recoil';
+import { authState } from '../recoil/atoms/authState'; // Update the import path if necessary
 
-const Register=()=>{
+const Register = () => {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [auth, setAuth] = useRecoilState(authState); // Use Recoil for auth state
     const navigate = useNavigate();
-    const [username,setUserName]=useState('');
-    const [email,setEmail]=useState('');
-    const [password,setPassword]=useState('');
-    const [error,setError]=useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
+        setError('');
 
-        try{
-            const userdata = {username,email,password,role:'admin'};
-            const response = await register(userdata);
-            if(response.token){
+        try {
+            const response = await register({ username, email, password });
+            if (response.token) {
+                // Save token to localStorage or state management (like Recoil)
                 localStorage.setItem('token', response.token);
-                navigate('/admin-dashboard');
+                // Update the auth state
+                setAuth({ isLoggedIn: true, user: { role: 'admin', email: response.user.email } });
+                navigate('/admin-dashboard'); // Redirect to dashboard
             }
-        }
-        catch (err) {
+        } catch (err) {
             setError(err.response.data.message || 'Registration failed');
         }
-    }
+    };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">

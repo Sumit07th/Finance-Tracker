@@ -1,33 +1,42 @@
-import React,{useState} from "react";
-import {login} from "../services/authService.js";
-import {useNavigate} from "react-router-dom";
+// src/components/Login.jsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../services/authService'; // Make sure this path is correct
+import { useRecoilState } from 'recoil';
+import { authState } from '../recoil/atoms/authState'; // Update the import path if necessary
 
 const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [auth, setAuth] = useRecoilState(authState); // Use Recoil for auth state
     const navigate = useNavigate();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error,setError] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
+        setError('');
 
-        try{
-            const userdata = {email,password};
-            const response = await login(userdata);
-            if(response.token){
-                localStorage.setItem("token",response.token);
+        try {
+            const response = await login({ email, password });
+            console.log('API Response:', response); // Log the response for debugging
 
-                if(response.role === 'admin'){
-                    navigate('/admin-dashboard')
+            if (response.token) {
+                // Check if user object is present
+                if (response.user) {
+                    // Save token to localStorage or state management (like Recoil)
+                    localStorage.setItem('token', response.token);
+                    // Update the auth state
+                    setAuth({ isLoggedIn: true, user: { role: response.user.role, email: response.user.email } });
+                    navigate(response.user.role === 'admin' ? '/admin-dashboard' : '/user-dashboard'); // Redirect to dashboard
+                } else {
+                    setError('User information not found.'); // Handle missing user data
                 }
-                else{
-                    navigate('/user-dashboard')
-                }
+            } else {
+                setError('Invalid login credentials.'); // Handle login failure
             }
-        }
-        catch (err) {
-            setError(err.response.data.message || 'Login failed');
+        } catch (err) {
+            console.error(err);
+            setError(err.response?.data?.message || 'Login failed'); // Show error message if available
         }
     };
 
