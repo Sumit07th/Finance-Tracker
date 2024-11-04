@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
         const token = generateToken(user._id);
         return res.json({
             token,
-            user: { email: user.email, role: user.role } // Ensure you are returning user information
+            user: { _id:user._id,email: user.email, role: user.role,username:user.username } // Ensure you are returning user information
         });
     } catch (error) {
         console.error("Login error:", error);

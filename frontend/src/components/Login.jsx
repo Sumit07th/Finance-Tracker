@@ -25,8 +25,9 @@ const Login = () => {
                 if (response.user) {
                     // Save token to localStorage or state management (like Recoil)
                     localStorage.setItem('token', response.token);
+                    console.log(response.user._id);
                     // Update the auth state
-                    setAuth({ isLoggedIn: true, user: { role: response.user.role, email: response.user.email } });
+                    setAuth({ isLoggedIn: true, user: { _id: response.user._id,role: response.user.role, email: response.user.email,username:response.user.username } });
                     navigate(response.user.role === 'admin' ? '/admin-dashboard' : '/user-dashboard'); // Redirect to dashboard
                 } else {
                     setError('User information not found.'); // Handle missing user data

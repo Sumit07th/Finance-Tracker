@@ -3,15 +3,20 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { authState } from '../recoil/atoms/authState'; // Update the import path if necessary
 import { useNavigate } from 'react-router-dom';
+import {logout} from "../services/authService.js";
 
 const Navbar = () => {
     const [auth, setAuth] = useRecoilState(authState);
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        setAuth({ isLoggedIn: false, user: null });
-        localStorage.removeItem('authState'); // Clear auth from localStorage
-        navigate('/login');
+    const handleLogout = async () => {
+        try {
+            await logout();
+            setAuth({ isLoggedIn: false, user: null });
+            navigate('/login');
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     };
 
     return (
@@ -20,19 +25,6 @@ const Navbar = () => {
             <div className="flex space-x-4">
                 {auth.isLoggedIn ? (
                     <>
-                        <button onClick={() => navigate('/dashboard')} className="hover:text-gray-300">
-                            Dashboard
-                        </button>
-                        {auth.user.role === 'admin' && (
-                            <>
-                                <button onClick={() => navigate('/manage-users')} className="hover:text-gray-300">
-                                    Manage Users
-                                </button>
-                                <button onClick={() => navigate('/add-expense')} className="hover:text-gray-300">
-                                    Add Expense
-                                </button>
-                            </>
-                        )}
                         <button onClick={handleLogout} className="hover:text-gray-300">
                             Logout
                         </button>

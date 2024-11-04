@@ -1,4 +1,4 @@
-import {registerUser,loginUser,logoutUser,addUser,deleteUser,getAllUser} from "../utils/api.js";
+import {registerUser,loginUser,logoutUser} from "../utils/api.js";
 
 // Register a new user
 export const register = async (userData) => {
@@ -27,53 +27,14 @@ export const login = async (userData) => {
     }
 }
 
-// logout user
 export const logout = async () => {
-    try{
+    try {
         await logoutUser();
         localStorage.removeItem('token');
-    }
-    catch(error){
-        console.error("Error Logout user",error);
+        localStorage.removeItem('authState');
+    } catch (error) {
+        console.error("Error Logging out user:", error);
         throw error;
     }
-}
+};
 
-// get all user
-export const fetchAllUsers = async () => {
-    try{
-        const response = await getAllUser();
-        return response.data;
-    }
-    catch(error){
-        console.error("Error in fetching all user",error);
-        throw error;
-    }
-}
-
-// add user
-
-export const createUser = async (userData) => {
-    try{
-        const response = await addUser(userData);
-        return response.data;
-    }
-    catch (error){
-        console.log("Error in adding a member",error);
-        throw error;
-    }
-}
-
-// remove user
-
-export const removeUser = async (memberId) => {
-    try{
-        const response = await deleteUser(memberId);
-        return response.data;
-    }
-    catch (error){
-        console.log("Error in removing a member",error);
-        throw error;
-    }
-
-}
