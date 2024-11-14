@@ -2,16 +2,26 @@ const User = require('../models/User');
 const {hashedPassword} = require('../utils/hashUtils');
 
 exports.getAllUsers = async (req, res) => {
-    const users = await User.find();
-    res.json(users);
-}
+    const adminId = req.user._id; // Get the admin's ID from the authenticated user
+    try {
+        const users = await User.find({ adminId: adminId, role: 'member' }); // Fetch only members of this admin
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching users', error });
+    }
+};
 
 exports.addUser = async (req, res) => {
     const { username, email, password } = req.body;
     const hashedPass = await hashedPassword(password);
 
     try {
-        const user = new User({username, email, password: hashedPass});
+        const user = new User({
+            username,
+            email,
+            password: hashedPass,
+            adminId: req.user.role === 'admin' ? req.user._id : undefined,
+        });
         await user.save();
         res.status(201).json({message: "User add Sucessfully"});
     }

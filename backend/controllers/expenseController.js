@@ -64,7 +64,7 @@ exports.addGroupExpense = async (req, res) => {
 
 // Get individual member balance including individual and group expenses
 exports.getMemberBalance = async (req, res) => {
-    const { memberId } = req.params;
+    const  memberId  = req.params.memberId;
 
     try {
         const personalExpenses = await Expense.aggregate([
@@ -90,7 +90,7 @@ exports.getMemberBalance = async (req, res) => {
 
 // Get complete expense history for a specific member
 exports.getMemberExpenseHistory = async (req, res) => {
-    const { memberId } = req.params;
+    const  memberId  = req.params.memberId;
 
     try {
         const history = await Expense.find({

@@ -28,7 +28,7 @@ function AllHistory() {
                     history.map((entry) => (
                         <div key={entry._id} className="border p-4 rounded shadow">
                             <p><strong>Description:</strong> {entry.message}</p>
-                            <p><strong>Amount:</strong> {entry.amount}</p>
+                            <p><strong>Amount: ₹</strong> {entry.amount}</p>
                             <p><strong>Type:</strong> {entry.isPersonal ? 'Personal' : 'Group'}</p>
                             {entry.isPersonal && entry.memberId && (
                                 <p><strong>Member Name:</strong> {entry.memberId.username}</p>
