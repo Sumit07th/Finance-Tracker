@@ -33,9 +33,9 @@ const connectDB = async () => {
 
 connectDB();
 
-app.use('/api/auth',authRoutes);
-app.use('/api/user',userRoutes);
-app.use('/api/expense',expenseRoutes);
+app.use('/auth',authRoutes);
+app.use('/user',userRoutes);
+app.use('/expense',expenseRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unexpected error:', err.message);
