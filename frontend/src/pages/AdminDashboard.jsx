@@ -28,11 +28,11 @@ const AdminDashboard = () => (
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-2xl transform hover:scale-105 transition-transform duration-300 ease-in-out">
                     <h2 className="text-xl font-bold text-gray-800">Group Expenses</h2>
-                    <p className="text-2xl font-extrabold text-indigo-600">$4,560</p>
+                    <p className="text-2xl font-extrabold text-indigo-600">₹4,560</p>
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-2xl transform hover:scale-105 transition-transform duration-300 ease-in-out">
                     <h2 className="text-xl font-bold text-gray-800">Total Debt Settled</h2>
-                    <p className="text-2xl font-extrabold text-indigo-600">$3,400</p>
+                    <p className="text-2xl font-extrabold text-indigo-600">₹3,400</p>
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-2xl transform hover:scale-105 transition-transform duration-300 ease-in-out">
                     <h2 className="text-xl font-bold text-gray-800">Pending Requests</h2>
