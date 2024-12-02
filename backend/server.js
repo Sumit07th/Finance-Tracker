@@ -3,8 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
-const groupRotes  = require('./routes/groupRoutes');
 const {MONGO_URI} = require('./config/config.js');
 
 const app = express();
@@ -12,7 +12,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.use(cors());
+app.use(cors({
+    origin: "https://finance-tracker-app-sage.vercel.app",
+    methods: ["POST", "GET", "PUT", "DELETE"],
+    credentials: true
+}));
 
 const connectDB = async () => {
     try{
@@ -30,8 +34,8 @@ const connectDB = async () => {
 connectDB();
 
 app.use('/api/auth',authRoutes);
+app.use('/api/user',userRoutes);
 app.use('/api/expense',expenseRoutes);
-app.use('/api/group',groupRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unexpected error:', err.message);

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "https://finance-tracker-six-eta.vercel.app";
 
 const API = axios.create({
     baseURL: BASE_URL,
@@ -26,13 +26,11 @@ export const registerUser = (userdata) => API.post("/auth/register", userdata);
 export const loginUser = (userdata) => API.post("/auth/login", userdata);
 export const logoutUser = () => API.post("/auth/logout");
 
-// Group Management (Admin Only)
+// User Management (Admin Only)
 
-export const getAllGroupMember = (groupId) => API.get(`/group/groups/${groupId}`);
-export const createGroup = (groupData) => API.post("/group/groups", groupData);
-export const deleteMemberFromGroup = (groupId,memberId) => API.delete(`/group/groups/${groupId}/member/${memberId}`);
-export const addMemberToGroup = (groupId,memberData) => API.post(`/group/groups/${groupId}`,memberData);
-export const deleteGroup = (groupId) => API.delete(`/group/groups/delete/${groupId}`);
+export const getAllUser = () => API.get("/user/get");
+export const addUser = (userdata) => API.post("/user/add", userdata);
+export const deleteUser = (userId) => API.delete(`/user/delete/${userId}`);
 
 // Expense Management (Admin only manage the expense whi sb karega)
 
@@ -45,5 +43,3 @@ export const addGroupExpense = (groupExpenseData) => API.post("/expense/group", 
 export const getMemberBalance = (memberId) => API.get(`expense/balance/${memberId}`);
 export const getMemberExpenseHistory = (memberId) => API.get(`expense/history/member/${memberId}`);
 export const getAllHistory = () => API.get("expense/history");
-export const getMemberGroupExpenseHistory = (groupId,memberId) => API.get(`expense/history/member/${groupId}/${memberId}`);
-export const getGroupExpenseHistory = (groupId) => API.get(`expense/history/group/${groupId}`);
