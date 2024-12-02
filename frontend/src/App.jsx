@@ -23,7 +23,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/dashboard/*" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
-                        <Route path="all-history" element={<ProtectedRoute><AllHistory /></ProtectedRoute>} />
+                        <Route path="create-group" element={<ProtectedRoute><AllHistory /></ProtectedRoute>} />
                         <Route path="all-users" element={<ProtectedRoute><AllUsers /></ProtectedRoute>} />
                         <Route path="add-user" element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
                         <Route path="add-group-expense" element={<ProtectedRoute><AddGroupExpense /></ProtectedRoute>} />

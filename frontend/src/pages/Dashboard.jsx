@@ -45,7 +45,7 @@ const Dashboard = () => (
             {/* Routes for Dynamic Content */}
             <div className="bg-white shadow-lg rounded-lg p-8 transition-transform duration-300 hover:shadow-xl transform hover:scale-105">
                 <Routes>
-                    <Route path="all-users" element={<AllUsers />} />
+                    <Route path="create-group" element={<AllUsers />} />
                     <Route path="add-user" element={<AddUser />} />
                     <Route path="add-group-expense" element={<AddGroupExpense />} />
                     <Route path="all-history" element={<AllHistory />} />

@@ -15,13 +15,9 @@ const Sidebar = ({ role }) => {
                 <h2 className="text-xl font-semibold mb-6">Finance Tracker</h2>
 
                     <>
-                        <Link to="/dashboard/all-users" className={`flex items-center space-x-2 p-2 rounded ${isActive('/admin-dashboard/all-users')} hover:bg-gray-700`}>
+                        <Link to="/dashboard/create-group" className={`flex items-center space-x-2 p-2 rounded ${isActive('/admin-dashboard/all-users')} hover:bg-gray-700`}>
                             <FaUsers />
-                            <span>Create</span>
-                        </Link>
-                        <Link to="/dashboard/add-user" className={`flex items-center space-x-2 p-2 rounded ${isActive('/admin-dashboard/add-user')} hover:bg-gray-700`}>
-                            <FaUserPlus />
-                            <span>Add User</span>
+                            <span>Create Group</span>
                         </Link>
                         <Link to="/dashboard/add-group-expense" className={`flex items-center space-x-2 p-2 rounded ${isActive('/admin-dashboard/add-group-expense')} hover:bg-gray-700`}>
                             <FaMoneyBillWave />

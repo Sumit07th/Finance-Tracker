@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
-const userRoutes = require('./routes/userRoutes');
+const groupRoutes  = require('./routes/groupRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const {MONGO_URI} = require('./config/config.js');
 
@@ -12,11 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
-app.use(cors({
-    origin: "https://finance-tracker-app-sage.vercel.app",
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true
-}));
+app.use(cors());
 
 const connectDB = async () => {
     try{
@@ -34,7 +30,7 @@ const connectDB = async () => {
 connectDB();
 
 app.use('/api/auth',authRoutes);
-app.use('/api/user',userRoutes);
+app.use('/api/group',groupRoutes);
 app.use('/api/expense',expenseRoutes);
 
 app.use((err, req, res, next) => {
