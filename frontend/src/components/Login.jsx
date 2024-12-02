@@ -32,7 +32,7 @@ const Login = () => {
                             username: response.user.username
                         }
                     });
-                    navigate(response.user.role === 'admin' ? '/admin-dashboard' : '/user-dashboard');
+                    navigate('/dashboard');
                 } else {
                     setError('User information not found.');
                 }

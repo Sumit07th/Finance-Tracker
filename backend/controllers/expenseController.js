@@ -1,12 +1,14 @@
 const Expense = require("../models/Expense");
 const mongoose = require('mongoose');
+const Group = require("../models/Group");
 
 // Add individual expense
 exports.addIndividualExpense = async (req, res) => {
-    const { amount, memberId, message } = req.body;
+    const { groupId,amount, memberId, message } = req.body;
 
     try {
         const expense = new Expense({
+            groupId,
             adminId: req.user.id,
             amount,
             isPersonal: true,
@@ -22,10 +24,11 @@ exports.addIndividualExpense = async (req, res) => {
 
 // Settle individual debt
 exports.settleIndividualDebt = async (req, res) => {
-    const { memberId, amount, message } = req.body;
+    const { groupId,memberId, amount, message } = req.body;
 
     try {
         const settlement = new Expense({
+            groupId,
             adminId: req.user.id,
             amount: -amount,
             isPersonal: true,
@@ -41,13 +44,21 @@ exports.settleIndividualDebt = async (req, res) => {
 
 // Add group expense and split among participants
 exports.addGroupExpense = async (req, res) => {
-    const { participants, amount, message } = req.body;
+    const { groupId, amount, message } = req.body;
+
 
     try {
+        const group = await Group.findById(groupId);
+
+        if (!group) {
+            return res.status(404).json({ message: 'Group not found' });
+        }
+        const participants = group.members;
         const splitAmount = amount / participants.length;
 
         // Create individual expense records for each participant
         const expenses = participants.map(participant => ({
+            groupId,
             adminId: req.user.id,
             memberId: participant,
             amount: splitAmount,
@@ -63,18 +74,19 @@ exports.addGroupExpense = async (req, res) => {
 };
 
 // Get individual member balance including individual and group expenses
+// Get Member Balance in a Group
 exports.getMemberBalance = async (req, res) => {
-    const  memberId  = req.params.memberId;
+    const { groupId, memberId } = req.params;
 
     try {
         const personalExpenses = await Expense.aggregate([
-            { $match: { memberId: new mongoose.Types.ObjectId(memberId), isPersonal: true } },
-            { $group: { _id: null, totalPersonal: { $sum: "$amount" } } }
+            { $match: { groupId: mongoose.Types.ObjectId(groupId), memberId: mongoose.Types.ObjectId(memberId), isPersonal: true } },
+            { $group: { _id: null, totalPersonal: { $sum: "$amount" } } },
         ]);
 
         const groupExpenses = await Expense.aggregate([
-            { $match: { memberId: new mongoose.Types.ObjectId(memberId), isPersonal: false } },
-            { $group: { _id: null, totalGroup: { $sum: "$amount" } } }
+            { $match: { groupId: mongoose.Types.ObjectId(groupId), memberId: mongoose.Types.ObjectId(memberId), isPersonal: false } },
+            { $group: { _id: null, totalGroup: { $sum: "$amount" } } },
         ]);
 
         const totalPersonal = personalExpenses[0]?.totalPersonal || 0;
@@ -83,10 +95,10 @@ exports.getMemberBalance = async (req, res) => {
 
         res.json({ balance: totalBalance });
     } catch (error) {
-        console.error('Error calculating balance:', error);
-        res.status(500).json({ message: 'Error calculating balance', error: error.message });
+        res.status(500).json({ message: 'Error calculating balance', error });
     }
 };
+
 
 // Get complete expense history for a specific member
 exports.getMemberExpenseHistory = async (req, res) => {
@@ -121,5 +133,42 @@ exports.getExpenseHistory = async (req, res) => {
         res.json(history);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching expense history', error });
+    }
+};
+
+// get a history of a specific member for one specific groups
+
+exports.getMemberGroupExpenseHistory = async (req, res) => {
+    const{groupId,memberId} = req.params;
+    try{
+        const history = await Expense.find({
+            groupId:groupId,
+            memberId:memberId
+        })
+            .sort({createdAt: -1})
+            .populate('memberId','username')
+            .populate('adminId','username')
+
+        res.json(history);
+    } catch(error){
+        console.error('Error fetching member group expense history:', error);
+        res.status(500).json({ message: 'Error fetching member group expense history', error });
+    }
+}
+
+// history of expenses of a particular group
+exports.getGroupExpenseHistory = async (req, res) => {
+    const { groupId } = req.params;
+
+    try {
+        const history = await Expense.find({ groupId: groupId }) // Filter by group ID
+            .sort({ createdAt: -1 })
+            .populate('memberId', 'username')
+            .populate('adminId', 'username');
+
+        res.json(history);
+    } catch (error) {
+        console.error('Error fetching group expense history:', error);
+        res.status(500).json({ message: 'Error fetching group expense history', error });
     }
 };

@@ -24,21 +24,6 @@ const authenticateToken = async (req, res, next) => {
     }
 };
 
-// Middleware to check for specific roles (e.g., admin or member)
-const authorizeRole = (allowedRoles = []) => {
-    return (req, res, next) => {
-        if (!req.user) {
-            return res.status(401).json({ message: 'Unauthorized. Please log in.' });
-        }
-
-        if (allowedRoles.includes(req.user.role)) {
-            next(); // Role is allowed, proceed to the next middleware or route handler
-        } else {
-            return res.status(403).json({ message: 'Access denied. Insufficient permissions.' });
-        }
-    };
-};
 
 
-
-module.exports = { authenticateToken, authorizeRole };
+module.exports = { authenticateToken };

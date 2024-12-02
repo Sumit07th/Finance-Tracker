@@ -1,4 +1,4 @@
-// src/pages/AdminDashboard.jsx
+// src/pages/Dashboard.jsx
 import React from 'react';
 import Sidebar from '../components/Sidebar';
 import AllUsers from './AllUsers';
@@ -6,8 +6,10 @@ import AddUser from './AddUser';
 import AddGroupExpense from './AddGroupExpense';
 import AllHistory from './AllHistory';
 import { Route, Routes } from 'react-router-dom';
+import UserBalance from "./UserBalance.jsx";
+import MemberHistory from "./MemberHistory.jsx";
 
-const AdminDashboard = () => (
+const Dashboard = () => (
     <div className="flex h-screen bg-gradient-to-br from-gray-100 to-gray-300">
         {/* Sidebar */}
         <Sidebar role="admin" />
@@ -47,10 +49,12 @@ const AdminDashboard = () => (
                     <Route path="add-user" element={<AddUser />} />
                     <Route path="add-group-expense" element={<AddGroupExpense />} />
                     <Route path="all-history" element={<AllHistory />} />
+                    <Route path="user-balance" element={<UserBalance />} />
+                    <Route path="member-history" element={<MemberHistory />} />
                 </Routes>
             </div>
         </div>
     </div>
 );
 
-export default AdminDashboard;
+export default Dashboard;

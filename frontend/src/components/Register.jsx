@@ -19,7 +19,7 @@ const Register = () => {
 
         try {
             // Register the user as an admin
-            const registerResponse = await register({ username, email, password, role: 'admin' });
+            const registerResponse = await register({ username, email, password });
 
             if (registerResponse.token) {
                 // Automatically log in the newly registered user
@@ -31,9 +31,9 @@ const Register = () => {
                     // Update the auth state
                     setAuth({
                         isLoggedIn: true,
-                        user: { role: 'admin', email: loginResponse.user.email },
+                        user: { email: loginResponse.user.email },
                     });
-                    navigate('/admin-dashboard'); // Redirect to admin dashboard
+                    navigate('/dashboard'); // Redirect to admin dashboard
                 }
             }
         } catch (err) {

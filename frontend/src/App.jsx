@@ -4,8 +4,7 @@ import Login from './components/Login.jsx';
 import Register from './components/Register.jsx';
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
-import UserDashboard from "./pages/UserDashboard.jsx";
+import Dashboard from "./pages/./Dashboard.jsx";
 import AllUsers from "./pages/AllUsers.jsx";
 import AddUser from "./pages/AddUser.jsx";
 import AddGroupExpense from "./pages/AddGroupExpense.jsx";
@@ -23,16 +22,15 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/admin-dashboard/*" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
+                    <Route path="/dashboard/*" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
                         <Route path="all-history" element={<ProtectedRoute><AllHistory /></ProtectedRoute>} />
                         <Route path="all-users" element={<ProtectedRoute><AllUsers /></ProtectedRoute>} />
                         <Route path="add-user" element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
                         <Route path="add-group-expense" element={<ProtectedRoute><AddGroupExpense /></ProtectedRoute>} />
-                    </Route>
-                    <Route path="/user-dashboard/*" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>}>
                         <Route path="user-balance" element={<UserBalance />} />
                         <Route path="member-history" element={<MemberHistory />} />
                     </Route>
+
 
 
                 </Routes>

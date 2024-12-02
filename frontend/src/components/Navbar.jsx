@@ -33,16 +33,15 @@ const Navbar = () => {
             <div className="flex items-center space-x-6">
                 {auth.isLoggedIn ? (
                     <>
-                        {/* Conditional links for admin or member */}
-                        {auth.user?.role === 'admin' ? (
+
                             <>
-                                <button onClick={() => navigate('/admin-dashboard/all-users')} className="hover:text-gray-300">Dashboard</button>
+                                <button onClick={() => navigate('/dashboard/all-users')} className="hover:text-gray-300">Dashboard</button>
                             </>
-                        ) : (
+
                             <>
-                                <button onClick={() => navigate('/user-dashboard/user-balance')} className="hover:text-gray-300">Your Balance</button>
+                                <button onClick={() => navigate('/dashboard/user-balance')} className="hover:text-gray-300">Your Balance</button>
                             </>
-                        )}
+
                         {/* Logout Button */}
                         <button onClick={handleLogout} className="hover:text-red-400 font-semibold">
                             Logout
