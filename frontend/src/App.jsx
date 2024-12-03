@@ -5,13 +5,8 @@ import Register from './components/Register.jsx';
 import Navbar from "./components/Navbar.jsx";
 import Home from "./pages/Home.jsx";
 import Dashboard from "./pages/./Dashboard.jsx";
-import AllUsers from "./pages/AllUsers.jsx";
-import AddUser from "./pages/AddUser.jsx";
-import AddGroupExpense from "./pages/AddGroupExpense.jsx";
-import AllHistory from "./pages/AllHistory.jsx";
-import MemberHistory from "./pages/MemberHistory.jsx";
-import UserBalance from "./pages/UserBalance.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import GroupPage from "./pages/GroupPage.jsx";
 
 function App() {
     return (
@@ -23,12 +18,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/dashboard/*" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
-                        <Route path="create-group" element={<ProtectedRoute><AllHistory /></ProtectedRoute>} />
-                        <Route path="all-users" element={<ProtectedRoute><AllUsers /></ProtectedRoute>} />
-                        <Route path="add-user" element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
-                        <Route path="add-group-expense" element={<ProtectedRoute><AddGroupExpense /></ProtectedRoute>} />
-                        <Route path="user-balance" element={<UserBalance />} />
-                        <Route path="member-history" element={<MemberHistory />} />
+                        <Route path="create-group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
+
                     </Route>
 
 

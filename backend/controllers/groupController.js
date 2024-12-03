@@ -5,10 +5,10 @@ const User = require("../models/User");
 exports.createGroup = async (req, res) => {
     const { name, description } = req.body;
     const admin = req.user._id;
-    const member= req.user._id;
+
 
     try{
-        const user = await User.findById(member);
+        const user = await User.findById(admin);
         if(!user){
             return res.status(404).json({message:'Member Not Found'});
         }
@@ -16,7 +16,7 @@ exports.createGroup = async (req, res) => {
             name,
             description,
             admin,
-            member
+            members:[admin]
         });
 
         await group.save();
@@ -86,7 +86,7 @@ exports.getGroupMember = async(req,res) =>{
     const {groupId} = req.params;
 
     try{
-        const group = await Group.findById(groupId).populate('members','name email');
+        const group = await Group.findById(groupId).populate('members','username email');
 
         if (!group) {
             return res.status(404).json({ message: 'Group not found' });
@@ -121,5 +121,27 @@ exports.deleteGroup = async (req,res) => {
         res.status(500).json({ message: 'Error deleting group', error });
     }
 };
+
+exports.getAllGroupsForUser = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const joinedGroups = await Group.find({ members: userId, admin: { $ne: userId } }).select("_id name admin members description createdAt");
+        const createdGroups = await Group.find({ admin: userId }).select("_id name admin members description createdAt");
+
+        console.log(createdGroups);
+
+
+        res.status(200).json({
+            message: `Groups for user ${userId}`,
+            createdGroups,
+            joinedGroups
+        });
+    } catch (error) {
+        console.error("Error fetching groups for user:", error);
+        res.status(500).json({ message: "Error fetching groups for this user", error });
+    }
+};
+
 
 

@@ -31,8 +31,9 @@ export const createGroup = (groupData) => API.post("/group/groups", groupData);
 export const deleteMemberFromGroup = (groupId,memberId) => API.delete(`/group/groups/${groupId}/member/${memberId}`);
 export const addMemberToGroup = (groupId,memberData) => API.post(`/group/groups/${groupId}`,memberData);
 export const deleteGroup = (groupId) => API.delete(`/group/groups/delete/${groupId}`);
+export const getAllGroupForUser = (memberId) => API.get(`group/groups/all/${memberId}`);
 
-// Expense Management (Admin only manage the expense whi sb karega)
+// Expense Management (Admin only manage the expense whi sb karega
 
 export const addIndividualExpense = (expenseData) => API.post("/expense/add-individual", expenseData);
 export const settleIndividualDebt = (settleData) => API.post("/expense/settle", settleData);

@@ -17,7 +17,7 @@ app.use(cors());
 const connectDB = async () => {
     try{
         await mongoose.connect(MONGO_URI, {
-            serverSelectionTimeoutMS:5000,
+            serverSelectionTimeoutMS:10000,
         });
         console.log('Connected to MongoDB');
     } catch(error) {
