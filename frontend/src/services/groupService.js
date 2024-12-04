@@ -40,3 +40,14 @@ export const getallmember = async (groupId) => {
         throw error;
     }
 }
+
+export const deletemember = async (groupId,memberId) => {
+    try{
+        const response = await deleteMemberFromGroup(groupId,memberId);
+        return response;
+    }catch(error){
+        console.error("Error in getting member of group",error);
+        throw error;
+    }
+}
+

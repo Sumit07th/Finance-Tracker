@@ -75,29 +75,45 @@ exports.addGroupExpense = async (req, res) => {
 
 // Get individual member balance including individual and group expenses
 // Get Member Balance in a Group
+
 exports.getMemberBalance = async (req, res) => {
     const { groupId, memberId } = req.params;
+    console.log(`Received request with groupId: ${groupId}, memberId: ${memberId}`);
 
     try {
+        if (!mongoose.Types.ObjectId.isValid(groupId)) {
+            console.error(`Invalid groupId: ${groupId}`);
+            return res.status(400).json({ message: "Invalid groupId format" });
+        }
+        if (!mongoose.Types.ObjectId.isValid(memberId)) {
+            console.error(`Invalid memberId: ${memberId}`);
+            return res.status(400).json({ message: "Invalid memberId format" });
+        }
+
+        // Use new ObjectId() for instantiating ObjectId
         const personalExpenses = await Expense.aggregate([
-            { $match: { groupId: mongoose.Types.ObjectId(groupId), memberId: mongoose.Types.ObjectId(memberId), isPersonal: true } },
+            { $match: { groupId: new mongoose.Types.ObjectId(groupId), memberId: new mongoose.Types.ObjectId(memberId), isPersonal: true } },
             { $group: { _id: null, totalPersonal: { $sum: "$amount" } } },
         ]);
 
         const groupExpenses = await Expense.aggregate([
-            { $match: { groupId: mongoose.Types.ObjectId(groupId), memberId: mongoose.Types.ObjectId(memberId), isPersonal: false } },
+            { $match: { groupId: new mongoose.Types.ObjectId(groupId), memberId: new mongoose.Types.ObjectId(memberId), isPersonal: false } },
             { $group: { _id: null, totalGroup: { $sum: "$amount" } } },
         ]);
 
-        const totalPersonal = personalExpenses[0]?.totalPersonal || 0;
-        const totalGroup = groupExpenses[0]?.totalGroup || 0;
+        const totalPersonal = personalExpenses.length ? personalExpenses[0].totalPersonal : 0;
+        const totalGroup = groupExpenses.length ? groupExpenses[0].totalGroup : 0;
         const totalBalance = totalPersonal + totalGroup;
 
         res.json({ balance: totalBalance });
     } catch (error) {
-        res.status(500).json({ message: 'Error calculating balance', error });
+        console.error("Error in getMemberBalance:", error);
+        res.status(500).json({ message: "Error calculating balance", error });
     }
 };
+
+
+
 
 
 // Get complete expense history for a specific member

@@ -8,7 +8,7 @@ const expenseSchema = new mongoose.Schema({
     message: {type:String},
     createdAt: { type: Date, default: Date.now },
     participants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    groupId: [{type:mongoose.Schema.Types.ObjectId,ref:'Group'}],
+    groupId: {type:mongoose.Schema.Types.ObjectId,ref:'Group'},
 }, { timestamps: true });
 
 module.exports = mongoose.model('Expense', expenseSchema);

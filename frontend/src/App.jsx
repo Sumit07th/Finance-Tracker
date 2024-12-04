@@ -7,6 +7,8 @@ import Home from "./pages/Home.jsx";
 import Dashboard from "./pages/./Dashboard.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import GroupPage from "./pages/GroupPage.jsx";
+import GroupInfo from "./pages/GroupInfo.jsx";
+import JoinGroupInfo from "./pages/JoinGroupInfo.jsx";
 
 function App() {
     return (
@@ -19,7 +21,8 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/dashboard/*" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
                         <Route path="create-group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
-
+                        <Route path="group-info/:groupId" element={<ProtectedRoute><GroupInfo /></ProtectedRoute>} />
+                        <Route path="joingroup-info/:groupId" element={<ProtectedRoute><JoinGroupInfo /></ProtectedRoute>} />
                     </Route>
 
 

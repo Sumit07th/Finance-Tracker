@@ -44,5 +44,5 @@ export const addGroupExpense = (groupExpenseData) => API.post("/expense/group", 
 export const getAllHistory = () => API.get("expense/history");
 export const getMemberGroupExpenseHistory = (groupId,memberId) => API.get(`expense/history/member/${groupId}/${memberId}`);
 export const getGroupExpenseHistory = (groupId) => API.get(`expense/history/group/${groupId}`);
-export const getMemberBalance = (memberId) => API.get(`expense/balance/${memberId}`);
+export const getMemberBalance = (groupId,memberId) => API.get(`expense/balance/${groupId}/${memberId}`);
 export const getMemberExpenseHistory = (memberId) => API.get(`expense/history/member/${memberId}`);

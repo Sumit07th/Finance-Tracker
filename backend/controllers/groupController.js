@@ -29,8 +29,8 @@ exports.createGroup = async (req, res) => {
 }
 
 exports.addMemberToGroup = async(req,res) => {
-    const {groupId} = req.params;
-    const {memberId} = req.body;
+    const {groupId,memberId} = req.params;
+
 
     try{
         const user = await User.findById(memberId);
@@ -92,7 +92,13 @@ exports.getGroupMember = async(req,res) =>{
             return res.status(404).json({ message: 'Group not found' });
         }
 
-        res.status(200).json({ message: 'Group members retrieved successfully', members: group.members });
+        res.status(200).json({ message: 'Group members retrieved successfully',
+            group: {
+                name: group.name,
+                description: group.description,
+                members: group.members,
+            },
+        });
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving group members', error });
     }

@@ -38,9 +38,9 @@ export const addExpenseForGroup = async (groupData) => {
 }
 
 // Get balance for a specific member (total of personal and group expenses)
-export const fetchMemberBalance = async (memberId) => {
+export const MemberBalance = async (groupId,memberId) => {
     try {
-        const response = await getMemberBalance(memberId);
+        const response = await getMemberBalance(groupId,memberId);
         return response.data;
     } catch (error) {
         console.error("Error fetching member balance:", error);
