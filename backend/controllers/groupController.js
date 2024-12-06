@@ -149,5 +149,31 @@ exports.getAllGroupsForUser = async (req, res) => {
     }
 };
 
+// Controller to verify user by email
+exports.verifyUserByEmail = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Validate email input
+        if (!email) {
+            return res.status(400).json({ success: false, message: "Email is required." });
+        }
+
+        // Find the user in the database by email
+        const user = await User.findOne({ email });
+
+        if (user) {
+            // User exists
+            return res.status(200).json({ success: true, message: "User found.", exists: true });
+        } else {
+            // User does not exist
+            return res.status(404).json({ success: false, message: "User not found.", exists: false });
+        }
+    } catch (error) {
+        console.error("Error verifying user by email:", error);
+        res.status(500).json({ success: false, message: "Server error. Please try again later." });
+    }
+};
+
 
 

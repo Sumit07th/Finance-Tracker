@@ -32,6 +32,7 @@ export const deleteMemberFromGroup = (groupId,memberId) => API.delete(`/group/gr
 export const addMemberToGroup = (groupId,memberData) => API.post(`/group/groups/${groupId}`,memberData);
 export const deleteGroup = (groupId) => API.delete(`/group/groups/delete/${groupId}`);
 export const getAllGroupForUser = (memberId) => API.get(`group/groups/all/${memberId}`);
+export const verifyUser = ({email}) => API.post('group/groups/verify-email',{email});
 
 // Expense Management (Admin only manage the expense whi sb karega
 
@@ -46,3 +47,11 @@ export const getMemberGroupExpenseHistory = (groupId,memberId) => API.get(`expen
 export const getGroupExpenseHistory = (groupId) => API.get(`expense/history/group/${groupId}`);
 export const getMemberBalance = (groupId,memberId) => API.get(`expense/balance/${groupId}/${memberId}`);
 export const getMemberExpenseHistory = (memberId) => API.get(`expense/history/member/${memberId}`);
+
+// notification
+export const sendGroupInvitation = (groupId, email) => API.post(`/notify/invite/${groupId}`, { email });
+export const getUserNotifications = () => API.get("/notify/notifications");
+export const respondToInvitation = (responseData) => API.post("/notify/notifications/respond", responseData);
+
+
+

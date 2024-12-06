@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getallmember, deletemember } from "../services/groupService.js";
+import { getallmember, deletemember,verificationUser } from "../services/groupService.js";
 import { MemberBalance, addPersonalExpense, settleDebt, addExpenseForGroup } from "../services/expenseService.js";
+import {sendNotification} from "../services/notifyService.js";
 import Modal from "../components/Modal.jsx";
+import AddMemberModal from "../components/AddMemberModal.jsx";
 
 const GroupInfo = () => {
     const { groupId } = useParams();
@@ -11,9 +13,11 @@ const GroupInfo = () => {
     const [balances, setBalances] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isGroupExpenseModalOpen, setIsGroupExpenseModalOpen] = useState(false);
+    const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
     const [selectedMember, setSelectedMember] = useState(null);
     const [amount, setAmount] = useState("");
     const [message, setMessage] = useState("");
+    const [email, setEmail] = useState("");
     const [actionType, setActionType] = useState(null);
 
     useEffect(() => {
@@ -67,6 +71,29 @@ const GroupInfo = () => {
         setMessage("");
         setSelectedMember(null);
         setIsGroupExpenseModalOpen(false);
+        setIsAddMemberModalOpen(false);
+        setEmail("");
+    };
+
+    const handleAddMember = async () => {
+        if (!email) {
+            toast.error("Please enter an email");
+            return;
+        }
+
+        try {
+            const userExists = await verificationUser(email); // Verify if user exists
+            if (userExists) {
+                await sendNotification(email, groupId); // Send notification
+                toast.success("Notification sent to the user");
+                handleCloseModal();
+            } else {
+                toast.error("User not found");
+            }
+        } catch (error) {
+            console.error("Error adding member:", error);
+            toast.error("Failed to send notification");
+        }
     };
 
     const handleAddExpense = async () => {
@@ -156,12 +183,20 @@ const GroupInfo = () => {
                     <h1 className="text-3xl font-bold mb-2">Group Name: {groupDetails.name}</h1>
                     <p className="text-gray-600">Description: {groupDetails.description}</p>
                 </div>
-                <button
-                    className="bg-blue-500 text-white py-2 px-4 rounded"
-                    onClick={() => setIsGroupExpenseModalOpen(true)}
-                >
-                    Add Group Expense
-                </button>
+                <div className="space-x-4">
+                    <button
+                        className="bg-blue-500 text-white py-2 px-4 rounded"
+                        onClick={() => setIsGroupExpenseModalOpen(true)}
+                    >
+                        Add Group Expense
+                    </button>
+                    <button
+                        className="bg-green-500 text-white py-2 px-4 rounded"
+                        onClick={() => setIsAddMemberModalOpen(true)}
+                    >
+                        Add Member
+                    </button>
+                </div>
             </div>
 
             <h2 className="text-2xl font-semibold mb-4">Group Members</h2>
@@ -199,6 +234,14 @@ const GroupInfo = () => {
                     </div>
                 ))}
             </div>
+
+            <AddMemberModal
+                isOpen={isAddMemberModalOpen}
+                onClose={handleCloseModal}
+                onSubmit={handleAddMember}
+                email={email}
+                setEmail={setEmail}
+            />
 
 
             <Modal

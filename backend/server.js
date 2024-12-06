@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const groupRoutes  = require('./routes/groupRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
+const notifyRoutes = require('./routes/notifyRoutes')
 const {MONGO_URI} = require('./config/config.js');
 
 const app = express();
@@ -32,6 +33,7 @@ connectDB();
 app.use('/api/auth',authRoutes);
 app.use('/api/group',groupRoutes);
 app.use('/api/expense',expenseRoutes);
+app.use('/api/notify',notifyRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unexpected error:', err.message);

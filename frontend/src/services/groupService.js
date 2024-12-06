@@ -1,5 +1,5 @@
 
-import {createGroup,deleteGroup,deleteMemberFromGroup,addMemberToGroup,getAllGroupMember,getAllGroupForUser} from "../utils/api.js";
+import {createGroup,deleteGroup,deleteMemberFromGroup,addMemberToGroup,getAllGroupMember,getAllGroupForUser,verifyUser} from "../utils/api.js";
 
 export const creategroup = async (groupdata) => {
     try{
@@ -44,6 +44,16 @@ export const getallmember = async (groupId) => {
 export const deletemember = async (groupId,memberId) => {
     try{
         const response = await deleteMemberFromGroup(groupId,memberId);
+        return response;
+    }catch(error){
+        console.error("Error in getting member of group",error);
+        throw error;
+    }
+}
+
+export const verificationUser = async ({email}) => {
+    try{
+        const response = await verifyUser({email});
         return response;
     }catch(error){
         console.error("Error in getting member of group",error);

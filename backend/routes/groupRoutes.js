@@ -7,7 +7,8 @@ const {
     removeMemberFromGroup,
     getGroupMember,
     deleteGroup,
-    getAllGroupsForUser
+    getAllGroupsForUser,
+    verifyUserByEmail
 } = require('../controllers/GroupController');
 
 router.post('/groups', authenticateToken, createGroup);
@@ -16,6 +17,7 @@ router.delete('/groups/:groupId/member/:memberId', authenticateToken, removeMemb
 router.get('/groups/:groupId', authenticateToken, getGroupMember);
 router.delete('/groups/delete/:groupId',authenticateToken,deleteGroup);
 router.get("/groups/all/:userId", getAllGroupsForUser);
+router.post('/groups/verify-email', verifyUserByEmail);
 
 
 module.exports = router;
