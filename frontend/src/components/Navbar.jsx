@@ -24,8 +24,8 @@ const Navbar = () => {
     const fetchNotifications = async () => {
         try {
             const response = await getNotification();
-            if (response && Array.isArray(response.notifications)) {
-                setNotifications(response.notifications);
+            if (response && Array.isArray(response.data.notifications)) {
+                setNotifications(response.data.notifications);
             } else {
                 setNotifications([]); // Default to an empty array if response is invalid
             }
@@ -36,8 +36,12 @@ const Navbar = () => {
     };
 
     const handleResponse = async (notificationId, response) => {
+        const respondData = {
+            notificationId,
+            response,
+        }
         try {
-            await respondNotification(notificationId, response);
+            await respondNotification(respondData);
             setNotifications(notifications.filter(notif => notif._id !== notificationId));
         } catch (error) {
             console.error("Failed to respond to notification:", error);

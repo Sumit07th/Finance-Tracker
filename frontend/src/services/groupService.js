@@ -52,6 +52,7 @@ export const deletemember = async (groupId,memberId) => {
 }
 
 export const verificationUser = async ({email}) => {
+    console.log(`Verification user ${email}`);
     try{
         const response = await verifyUser({email});
         return response;

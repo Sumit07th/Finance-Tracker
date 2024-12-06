@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getallmember, deletemember,verificationUser } from "../services/groupService.js";
@@ -82,9 +82,10 @@ const GroupInfo = () => {
         }
 
         try {
-            const userExists = await verificationUser(email); // Verify if user exists
+            const userExists = await verificationUser({email}); // Verify if user exists
+            console.log(userExists)
             if (userExists) {
-                await sendNotification(email, groupId); // Send notification
+                await sendNotification(groupId, email); // Send notification
                 toast.success("Notification sent to the user");
                 handleCloseModal();
             } else {
@@ -200,36 +201,38 @@ const GroupInfo = () => {
             </div>
 
             <h2 className="text-2xl font-semibold mb-4">Group Members</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 w-full">
                 {groupDetails.members.map((member) => (
                     <div
                         key={member._id}
-                        className="border rounded-lg p-4 shadow-md bg-white hover:shadow-lg transition-shadow"
+                        className="border rounded-lg p-4 shadow-md bg-white hover:shadow-lg transition-shadow flex flex-col justify-between h-full"
                     >
-                        <h3 className="text-lg font-bold text-gray-800">{member.username}</h3>
-                        <p className="text-gray-600">{member.email}</p>
-                        <p className="text-gray-800 font-semibold">
-                            Balance: ₹ {balances[member._id] !== undefined ? balances[member._id] : "Loading..."}
-                        </p>
-                        <div className="flex justify-between mt-2">
-                            <button
-                                className="bg-blue-500 text-white py-1 px-4 rounded"
-                                onClick={() => handleOpenModal(member,"expense")}
-                            >
-                                Add Expense
-                            </button>
-                            <button
-                                className="bg-green-500 text-white py-1 px-4 rounded"
-                                onClick={() => handleOpenModal(member,"settle")}
-                            >
-                                Settle Amount
-                            </button>
-                            <button
-                                className="bg-red-500 text-white py-1 px-4 rounded"
-                                onClick={() => handleDeleteMember(member._id)}
-                            >
-                                Delete
-                            </button>
+                        <div>
+                            <h3 className="text-lg font-bold text-gray-800">{member.username}</h3>
+                            <p className="text-gray-600">{member.email}</p>
+                            <p className="text-gray-800 font-semibold">
+                                Balance: ₹ {balances[member._id] !== undefined ? balances[member._id] : "Loading..."}
+                            </p>
+                            <div className="flex justify-between mt-2">
+                                <button
+                                    className="bg-blue-500 text-white py-1 px-4 rounded"
+                                    onClick={() => handleOpenModal(member, "expense")}
+                                >
+                                    Add Expense
+                                </button>
+                                <button
+                                    className="bg-green-500 text-white py-1 px-4 rounded"
+                                    onClick={() => handleOpenModal(member, "settle")}
+                                >
+                                    Settle Amount
+                                </button>
+                                <button
+                                    className="bg-red-500 text-white py-1 px-4 rounded"
+                                    onClick={() => handleDeleteMember(member._id)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         </div>
                     </div>
                 ))}

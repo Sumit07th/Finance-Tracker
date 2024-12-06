@@ -43,6 +43,7 @@ exports.getUserNotifications = async (req, res) => {
             .populate('senderId', 'username email')
             .populate('groupId', 'name')
             .sort({ createdAt: -1 });
+        console.log("notifications is ", notifications)
 
         res.status(200).json({ notifications });
     } catch (error) {
@@ -53,6 +54,7 @@ exports.getUserNotifications = async (req, res) => {
 
 exports.respondToInvitation = async (req, res) => {
     const { notificationId, response } = req.body;
+    console.log("respons notif", req.body)
 
     try {
         const notification = await Notification.findById(notificationId);
