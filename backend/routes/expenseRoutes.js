@@ -20,9 +20,8 @@ router.post('/group', authenticateToken, addGroupExpense);
 // Accessible by both admin and member
 router.get('/balance/:groupId/:memberId', authenticateToken, getMemberBalance);
 
-router.get('/history/member/:memberId', authenticateToken, getMemberExpenseHistory);
-router.get('/history', authenticateToken, getExpenseHistory);
-router.get("/history/member/:groupId/:memberId",authenticateToken, getMemberGroupExpenseHistory); // Member's history in a group
-router.get("/history/group/:groupId",authenticateToken, getGroupExpenseHistory);
+
+router.get('/history/member/:groupId/:memberId',authenticateToken, getMemberGroupExpenseHistory); // Member's history in a group
+router.get('/history/group/:groupId',authenticateToken, getGroupExpenseHistory);
 
 module.exports = router;

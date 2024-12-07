@@ -1,4 +1,4 @@
-import {addIndividualExpense,settleIndividualDebt,addGroupExpense,getMemberExpenseHistory,getMemberBalance,getAllHistory} from "../utils/api.js";
+import {addIndividualExpense,settleIndividualDebt,addGroupExpense,getMemberBalance,getMemberGroupExpenseHistory,getGroupExpenseHistory} from "../utils/api.js";
 
 // add member personal expense
 export const addPersonalExpense = async (expenseData) => {
@@ -48,6 +48,28 @@ export const MemberBalance = async (groupId,memberId) => {
     }
 };
 
+export const getMemberHistoryOfGroup = async (groupId,memberId) => {
+    try {
+        const response = await getMemberGroupExpenseHistory(groupId,memberId);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching member balance:", error);
+        throw error;
+    }
+};
+
+export const getGroupHistory = async (groupId) => {
+    try {
+        const response = await getGroupExpenseHistory(groupId);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching member balance:", error);
+        throw error;
+    }
+};
+
+
+/*
 // Get entire expense history for a specific member
 export const fetchMemberExpenseHistory = async (memberId) => {
     try {
@@ -69,3 +91,5 @@ export const fetchAllExpenses = async () => {
         throw error;
     }
 };
+
+ */

@@ -41,12 +41,14 @@ export const settleIndividualDebt = (settleData) => API.post("/expense/settle", 
 export const addGroupExpense = (groupExpenseData) => API.post("/expense/group", groupExpenseData);
 
 // Expense viewing by both member and admin
+//export const getAllHistory = () => API.get("expense/history");
+//export const getMemberExpenseHistory = (memberId) => API.get(`expense/history/member/${memberId}`);
 
-export const getAllHistory = () => API.get("expense/history");
+
 export const getMemberGroupExpenseHistory = (groupId,memberId) => API.get(`expense/history/member/${groupId}/${memberId}`);
 export const getGroupExpenseHistory = (groupId) => API.get(`expense/history/group/${groupId}`);
 export const getMemberBalance = (groupId,memberId) => API.get(`expense/balance/${groupId}/${memberId}`);
-export const getMemberExpenseHistory = (memberId) => API.get(`expense/history/member/${memberId}`);
+
 
 // notification
 export const sendGroupInvitation = (groupId, email) => API.post(`/notify/invite/${groupId}`, { email });

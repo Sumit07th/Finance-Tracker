@@ -113,51 +113,12 @@ exports.getMemberBalance = async (req, res) => {
 };
 
 
-
-
-
-// Get complete expense history for a specific member
-exports.getMemberExpenseHistory = async (req, res) => {
-    const  memberId  = req.params.memberId;
-
-    try {
-        const history = await Expense.find({
-            $or: [
-                { memberId: memberId, isPersonal: true }, // Individual expenses
-                { memberId: memberId, isPersonal: false } // Group expenses the member participated in
-            ]
-        })
-            .sort({ createdAt: -1 }) // Sort by latest date
-            .populate('memberId', 'username') // Populate member details
-            .populate('adminId', 'username'); // Populate admin details
-
-        res.json(history);
-    } catch (error) {
-        console.error('Error fetching member expense history:', error);
-        res.status(500).json({ message: 'Error fetching expense history', error });
-    }
-};
-
-// Get all expenses for the admin (general history)
-exports.getExpenseHistory = async (req, res) => {
-    try {
-        const history = await Expense.find({ adminId: req.user.id })
-            .populate('memberId', 'username') // Fetch member details if personal
-            .populate('participants', 'username') // Fetch participants if group
-            .sort({ createdAt: -1 }); // Sort by latest
-
-        res.json(history);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching expense history', error });
-    }
-};
-
 // get a history of a specific member for one specific groups
 
 exports.getMemberGroupExpenseHistory = async (req, res) => {
     const{groupId,memberId} = req.params;
     try{
-        const history = await Expense.find({
+        const expenses = await Expense.find({
             groupId:groupId,
             memberId:memberId
         })
@@ -165,26 +126,70 @@ exports.getMemberGroupExpenseHistory = async (req, res) => {
             .populate('memberId','username')
             .populate('adminId','username')
 
-        res.json(history);
+        if (!expenses || expenses.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        // Format the expense history
+        const history = expenses.map(expense => ({
+            amount: expense.amount,
+            message: expense.message,
+            isPersonal: expense.isPersonal,
+            member: expense.memberId ? expense.memberId.username : 'Group',
+            admin: expense.adminId?.username || 'N/A',
+            createdAt: expense.createdAt
+        }));
+
+        return res.status(200).json({ success: true, history });
     } catch(error){
         console.error('Error fetching member group expense history:', error);
-        res.status(500).json({ message: 'Error fetching member group expense history', error });
+        return res.status(500).json({ message: 'Error fetching member group expense history', error });
     }
 }
 
 // history of expenses of a particular group
+
+
+
 exports.getGroupExpenseHistory = async (req, res) => {
     const { groupId } = req.params;
 
-    try {
-        const history = await Expense.find({ groupId: groupId }) // Filter by group ID
-            .sort({ createdAt: -1 })
-            .populate('memberId', 'username')
-            .populate('adminId', 'username');
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return res.status(400).json({ message: 'Invalid group ID' });
+    }
 
-        res.json(history);
+    try {
+
+        const expenses = await Expense.find({ groupId })
+            .sort({ createdAt: -1 }) // Sort by latest first
+            .populate('memberId', 'username') // Populate memberId with username
+            .populate('adminId', 'username'); // Populate adminId with username
+
+        // Check if expenses exist
+        if (!expenses || expenses.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        // Format the expense history
+        const history = expenses.map(expense => ({
+            amount: expense.amount,
+            message: expense.message,
+            isPersonal: expense.isPersonal,
+            member: expense.memberId ? expense.memberId.username : 'Group',
+            admin: expense.adminId?.username || 'N/A',
+            createdAt: expense.createdAt
+        }));
+
+        console.log(history);
+
+
+        return res.status(200).json({ success: true, history });
     } catch (error) {
-        console.error('Error fetching group expense history:', error);
-        res.status(500).json({ message: 'Error fetching group expense history', error });
+        console.error('Error fetching group expense history:', error.message);
+        return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
 };
+
+
+
+

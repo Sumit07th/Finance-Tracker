@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getAllGroupsforuser, creategroup, deletegroup, getallmember } from "../services/groupService";
+import {getGroupHistory} from "../services/expenseService.js";
 import { toast } from "react-toastify";
 import { useRecoilValue } from 'recoil';
 import { authState } from '../recoil/atoms/authState';
@@ -13,6 +14,9 @@ const GroupPage = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [groupName, setGroupName] = useState("");
     const [groupDescription, setGroupDescription] = useState("");
+    const [historyModalOpen, setHistoryModalOpen] = useState(false);
+    const [selectedGroupHistory, setSelectedGroupHistory] = useState([]);
+    const [selectedGroupName, setSelectedGroupName] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -82,6 +86,31 @@ const GroupPage = () => {
         }
     };
 
+    const fetchGroupHistory = async (groupId, groupName) => {
+        try {
+            const response = await getGroupHistory(groupId);
+            console.log(response.history);
+            if (response.status === 200 && Array.isArray(response.history) && response.history.length === 0) {
+                console.log("No history available for this group.");
+                setSelectedGroupHistory([]);
+                setSelectedGroupName(groupName);
+                setHistoryModalOpen(true);
+                return;
+            }
+            if (Array.isArray(response.history)) {
+                setSelectedGroupHistory(response.history);
+            } else {
+                setSelectedGroupHistory([]); // Fallback to an empty array if the response is not valid
+            }
+            setSelectedGroupName(groupName);
+            setHistoryModalOpen(true);
+        } catch (error) {
+            console.error("Error fetching group history:", error);
+            toast.error("Failed to fetch group history");
+            setSelectedGroupHistory([]); // Set to empty on error
+        }
+    };
+
     const handleCardClick = (groupId, isCreatedGroup) => {
         const route = isCreatedGroup ? `/dashboard/group-info/${groupId}` : `/dashboard/joingroup-info/${groupId}`;
         navigate(route);
@@ -139,6 +168,18 @@ const GroupPage = () => {
                         <li className="text-gray-500 italic">Loading members...</li>
                     )}
                 </ul>
+            </div>
+
+            <div className="mt-4">
+                <button
+                    className="bg-blue-500 text-white py-2 px-4 rounded mt-2"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        fetchGroupHistory(group._id, group.name);
+                    }}
+                >
+                    View History
+                </button>
             </div>
         </div>
     );
@@ -211,8 +252,64 @@ const GroupPage = () => {
                     </div>
                 </div>
             )}
+
+            {historyModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+                        {/* Close Button */}
+                        <button
+                            className="absolute top-4 right-4 bg-red-500 text-white py-1 px-2 rounded-full"
+                            onClick={() => setHistoryModalOpen(false)}
+                        >
+                            ×
+                        </button>
+
+                        {/* Modal Header */}
+                        <h2 className="text-2xl font-bold mb-4 text-center">
+                            {selectedGroupName} - Expense History
+                        </h2>
+
+                        {/* Expense History Cards */}
+                        <div className="space-y-4 max-h-96 overflow-y-auto">
+                            {selectedGroupHistory.length > 0 ? (
+                                selectedGroupHistory.map((expense) => (
+                                    <div
+                                        key={expense._id}
+                                        className="border rounded-lg p-4 shadow-md bg-gray-50"
+                                    >
+                                        <h3 className="font-semibold text-lg text-gray-800 mb-2">
+                                            {expense.isPersonal ? "Personal Expense" : "Group Expense"}
+                                        </h3>
+                                        <p className="text-gray-600">
+                                            <span className="font-bold">Amount:</span> ₹{expense.amount}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span className="font-bold">Message:</span> {expense.message}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span className="font-bold">Added To:</span> {expense.member}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span className="font-bold">Added By:</span> {expense.admin}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span
+                                                className="font-bold">Date:</span> {new Date(expense.createdAt).toLocaleString()}
+                                        </p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-gray-500 italic">No history available.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
         </div>
     );
 };
+
 
 export default GroupPage;
