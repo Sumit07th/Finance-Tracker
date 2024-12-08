@@ -1,4 +1,5 @@
-import {registerUser,loginUser,logoutUser} from "../utils/api.js";
+import {registerUser,loginUser,logoutUser,changedPassword} from "../utils/api.js";
+
 
 // Register a new user
 export const register = async (userData) => {
@@ -37,4 +38,14 @@ export const logout = async () => {
         throw error;
     }
 };
+
+export const change = async ({oldPassword,newPassword}) => {
+    try{
+        console.log({oldPassword,newPassword});
+        const response = await changedPassword({oldPassword,newPassword});
+        return response.data;
+    }catch(error){
+        console.error("Error Change Password",error);
+    }
+}
 

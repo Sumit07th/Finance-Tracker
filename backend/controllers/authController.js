@@ -54,3 +54,36 @@ exports.login = async (req, res) => {
 exports.logout = (req, res) => {
     return res.status(200).json({ message: 'Logout successful' });
 };
+
+exports.changePassword = async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+    console.log({oldPassword,newPassword});
+    const userId = req.user._id;
+
+    if (!oldPassword || !newPassword) {
+        return res.status(400).json({message:'Old password and new password are required'})
+    }
+
+    const user = await User.findById(userId).select('+password');
+
+    if (!user) {
+        return res.status(400).json({message:'Invalid user id or user does not exist'});
+    }
+
+    // Compare the provided password with the stored hashed password
+    const isMatch = await comparePassword(oldPassword, user.password);
+
+    if (!isMatch) {
+        return res.status(400).json({message:'Invalid Old Password'});
+    }
+    const hashedPass = await hashedPassword(newPassword);
+    user.password = hashedPass;
+    await user.save();
+
+    user.password = undefined;
+
+   return res.status(200).json({
+        success: true,
+        message: 'Password changed successfully',
+    });
+};

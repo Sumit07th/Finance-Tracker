@@ -25,6 +25,7 @@ API.interceptors.request.use((req) => {
 export const registerUser = (userdata) => API.post("/auth/register", userdata);
 export const loginUser = (userdata) => API.post("/auth/login", userdata);
 export const logoutUser = () => API.post("/auth/logout");
+export const changedPassword = ({oldPassword,newPassword}) => API.post("/auth/changed-password", {oldPassword,newPassword});
 
 // Group ke liye
 
