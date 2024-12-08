@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil';
 import { authState } from '../recoil/atoms/authState';
 import { useNavigate } from 'react-router-dom';
 import { logout } from "../services/authService";
-import { getNotification, respondNotification } from "../services/notifyService";
+import {closedNotification, getNotification, respondNotification} from "../services/notifyService";
 
 const Navbar = () => {
     const [auth, setAuth] = useRecoilState(authState);
@@ -42,9 +42,26 @@ const Navbar = () => {
         }
         try {
             await respondNotification(respondData);
+            // Remove the responded notification from the current list
             setNotifications(notifications.filter(notif => notif._id !== notificationId));
+            // Fetch updated notifications to reflect any changes
+            fetchNotifications();
         } catch (error) {
             console.error("Failed to respond to notification:", error);
+        }
+    };
+
+    const handleClose = async (notificationId) => {
+        const respondData = {
+            notificationId,
+        }
+        try {
+            await closedNotification(respondData);
+            // Remove the closed notification from the current list
+            setNotifications(notifications.filter(notif => notif._id !== notificationId));
+            fetchNotifications(); // Fetch updated notifications
+        } catch (error) {
+            console.error("Failed to mark notification as read:", error);
         }
     };
 
@@ -59,8 +76,7 @@ const Navbar = () => {
             {/* Logo / Title */}
             <div
                 className="text-2xl font-bold cursor-pointer hover:text-gray-300"
-                onClick={() => navigate('/')}
-            >
+                onClick={() => navigate('/')}>
                 Finance Tracker
             </div>
 
@@ -100,6 +116,9 @@ const Navbar = () => {
                                                     <div className="font-bold">{notif.type}</div>
                                                     <div>{notif.message}</div>
                                                     <div className="flex space-x-2 mt-2">
+
+                                                        {notif.type === 'Group Invitation' && (
+                                                            <>
                                                         <button
                                                             onClick={() => handleResponse(notif._id, 'Accepted')}
                                                             className="text-green-600 hover:underline"
@@ -112,6 +131,17 @@ const Navbar = () => {
                                                         >
                                                             Reject
                                                         </button>
+                                                            </>
+                                                            )}
+
+                                                        {(notif.type === 'Invitation Response') && (
+                                                            <button
+                                                                onClick={() => handleClose(notif._id)}
+                                                                className="text-gray-600 hover:underline"
+                                                            >
+                                                                Close
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 </div>
                                             ))

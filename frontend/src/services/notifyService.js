@@ -1,4 +1,4 @@
-import {sendGroupInvitation, respondToInvitation, getUserNotifications, getAllGroupForUser} from "../utils/api.js";
+import {sendGroupInvitation, respondToInvitation, getUserNotifications, closeNotification} from "../utils/api.js";
 
 export const sendNotification = async (groupId,email) => {
     try{
@@ -23,6 +23,16 @@ export const getNotification = async () => {
 export const respondNotification = async (respondData) => {
     try{
         const response = await respondToInvitation(respondData);
+        return response;
+    }catch(error){
+        console.error("Error getting all group",error);
+        throw error;
+    }
+}
+
+export const closedNotification = async (respondData) => {
+    try{
+        const response = await closeNotification(respondData);
         return response;
     }catch(error){
         console.error("Error getting all group",error);

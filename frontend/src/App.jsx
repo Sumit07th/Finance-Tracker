@@ -9,6 +9,9 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import GroupPage from "./pages/GroupPage.jsx";
 import GroupInfo from "./pages/GroupInfo.jsx";
 import JoinGroupInfo from "./pages/JoinGroupInfo.jsx";
+import PersonalExpense from "./pages/PersonalExpense.jsx";
+import ChangePassword from "./pages/ChangePassword.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
 
 function App() {
     return (
@@ -23,10 +26,10 @@ function App() {
                         <Route path="create-group" element={<ProtectedRoute><GroupPage /></ProtectedRoute>} />
                         <Route path="group-info/:groupId" element={<ProtectedRoute><GroupInfo /></ProtectedRoute>} />
                         <Route path="joingroup-info/:groupId" element={<ProtectedRoute><JoinGroupInfo /></ProtectedRoute>} />
+                        <Route path="personal-expenses" element={<ProtectedRoute><PersonalExpense /></ProtectedRoute>} />
+                        <Route path="change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
+                        <Route path="user-dashboard" element={<ProtectedRoute><UserDashboard /></ProtectedRoute>} />
                     </Route>
-
-
-
                 </Routes>
             </main>
         </Router>

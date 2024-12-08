@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const groupRoutes  = require('./routes/groupRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const notifyRoutes = require('./routes/notifyRoutes')
+const personalExpenseRoutes = require('./routes/personalExpenseRoutes');
 const {MONGO_URI} = require('./config/config.js');
 
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/auth',authRoutes);
 app.use('/api/group',groupRoutes);
 app.use('/api/expense',expenseRoutes);
 app.use('/api/notify',notifyRoutes);
+app.use('/api/personal',personalExpenseRoutes);
 
 app.use((err, req, res, next) => {
     console.error('Unexpected error:', err.message);

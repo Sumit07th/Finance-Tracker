@@ -26,6 +26,8 @@ export const registerUser = (userdata) => API.post("/auth/register", userdata);
 export const loginUser = (userdata) => API.post("/auth/login", userdata);
 export const logoutUser = () => API.post("/auth/logout");
 
+// Group ke liye
+
 export const getAllGroupMember = (groupId) => API.get(`/group/groups/${groupId}`);
 export const createGroup = (groupData) => API.post("/group/groups", groupData);
 export const deleteMemberFromGroup = (groupId,memberId) => API.delete(`/group/groups/${groupId}/member/${memberId}`);
@@ -41,8 +43,6 @@ export const settleIndividualDebt = (settleData) => API.post("/expense/settle", 
 export const addGroupExpense = (groupExpenseData) => API.post("/expense/group", groupExpenseData);
 
 // Expense viewing by both member and admin
-//export const getAllHistory = () => API.get("expense/history");
-//export const getMemberExpenseHistory = (memberId) => API.get(`expense/history/member/${memberId}`);
 
 
 export const getMemberGroupExpenseHistory = (groupId,memberId) => API.get(`expense/history/member/${groupId}/${memberId}`);
@@ -54,6 +54,7 @@ export const getMemberBalance = (groupId,memberId) => API.get(`expense/balance/$
 export const sendGroupInvitation = (groupId, email) => API.post(`/notify/invite/${groupId}`, { email });
 export const getUserNotifications = () => API.get("/notify/notifications");
 export const respondToInvitation = (responseData) => API.post("/notify/notifications/respond", responseData);
+export const closeNotification = (responseData) => API.post("/notify/notifications/close-notifications", responseData);
 
 
 
