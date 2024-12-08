@@ -5,6 +5,9 @@ import { Route, Routes } from 'react-router-dom';
 import CreateGroup from "./GroupPage.jsx";
 import GroupInfo from "./GroupInfo.jsx";
 import JoinGroupInfo from "./JoinGroupInfo.jsx";
+import PersonalExpense from "./PersonalExpense.jsx";
+import ChangePassword from "./ChangePassword.jsx";
+import UserDashboard from "./UserDashboard.jsx";
 
 const Dashboard = () => (
     <div className="flex h-screen bg-gradient-to-br from-gray-100 to-gray-300">
@@ -15,6 +18,10 @@ const Dashboard = () => (
                     <Route path="create-group" element={<CreateGroup />} />
                     <Route path="group-info/:groupId" element={<GroupInfo />} />
                     <Route path="joingroup-info/:groupId" element={<JoinGroupInfo />} />
+                    <Route path="personal-expenses" element={<PersonalExpense />} />
+                    <Route path="change-password" element={<ChangePassword />} />
+                    <Route path="user-dashboard" element={<UserDashboard />} />
+
                 </Routes>
             </div>
         </div>

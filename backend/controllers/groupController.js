@@ -135,7 +135,7 @@ exports.getAllGroupsForUser = async (req, res) => {
         const joinedGroups = await Group.find({ members: userId, admin: { $ne: userId } }).select("_id name admin members description createdAt");
         const createdGroups = await Group.find({ admin: userId }).select("_id name admin members description createdAt");
 
-        console.log(createdGroups);
+
 
 
         res.status(200).json({

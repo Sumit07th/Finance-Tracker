@@ -5,7 +5,7 @@ export const sendNotification = async (groupId,email) => {
         const response = await sendGroupInvitation(groupId,email);
         return response;
     }catch(error){
-        console.error("Error getting all group",error);
+        console.error("Error sending notification",error);
         throw error;
     }
 }
@@ -15,7 +15,7 @@ export const getNotification = async () => {
         const response = await getUserNotifications();
         return response;
     }catch(error){
-        console.error("Error getting all group",error);
+        console.error("Error getting all notification",error);
         throw error;
     }
 }
@@ -25,7 +25,7 @@ export const respondNotification = async (respondData) => {
         const response = await respondToInvitation(respondData);
         return response;
     }catch(error){
-        console.error("Error getting all group",error);
+        console.error("Error in responding notification",error);
         throw error;
     }
 }
@@ -35,7 +35,7 @@ export const closedNotification = async (respondData) => {
         const response = await closeNotification(respondData);
         return response;
     }catch(error){
-        console.error("Error getting all group",error);
+        console.error("Error updating the notification",error);
         throw error;
     }
 }

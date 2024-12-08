@@ -6,7 +6,7 @@ export const creategroup = async (groupdata) => {
         const response = await createGroup(groupdata);
         return response;
     }catch(error){
-        console.error("Error adding personal expense",error);
+        console.error("Error in creating group",error);
         throw error;
     }
 }
@@ -46,7 +46,7 @@ export const deletemember = async (groupId,memberId) => {
         const response = await deleteMemberFromGroup(groupId,memberId);
         return response;
     }catch(error){
-        console.error("Error in getting member of group",error);
+        console.error("Error in delete member from group",error);
         throw error;
     }
 }
@@ -57,7 +57,7 @@ export const verificationUser = async ({email}) => {
         const response = await verifyUser({email});
         return response;
     }catch(error){
-        console.error("Error in getting member of group",error);
+        console.error("Error in verify user",error);
         throw error;
     }
 }

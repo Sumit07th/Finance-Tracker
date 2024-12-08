@@ -4,7 +4,7 @@ const PersonalExpense = require("../models/PersonalExpense");
 exports.addPersonalExpense = async (req, res) => {
     try {
         const { amount, message, category, paymentMethod, isRecurring, recurrencePeriod, tags, notes } = req.body;
-        const userId = req.user.id;
+        const userId = req.user._id;
 
         if (!amount || !message || !category) {
             return res.status(400).json({ message: 'Amount, message, and category are required' });

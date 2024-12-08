@@ -19,7 +19,7 @@ export const settleDebt = async (debtData) => {
         return response.data;
     }
     catch(err){
-        console.error("Error adding personal debt",err);
+        console.error("Error settle personal debt",err);
         throw err;
     }
 }
@@ -53,7 +53,7 @@ export const getMemberHistoryOfGroup = async (groupId,memberId) => {
         const response = await getMemberGroupExpenseHistory(groupId,memberId);
         return response.data;
     } catch (error) {
-        console.error("Error fetching member balance:", error);
+        console.error("Error getting history of member of particular group:", error);
         throw error;
     }
 };
@@ -63,33 +63,8 @@ export const getGroupHistory = async (groupId) => {
         const response = await getGroupExpenseHistory(groupId);
         return response.data;
     } catch (error) {
-        console.error("Error fetching member balance:", error);
+        console.error("Error getting group history:", error);
         throw error;
     }
 };
 
-
-/*
-// Get entire expense history for a specific member
-export const fetchMemberExpenseHistory = async (memberId) => {
-    try {
-        const response = await getMemberExpenseHistory(memberId);
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching member expense history:", error);
-        throw error;
-    }
-};
-
-// Get general expense history for the admin
-export const fetchAllExpenses = async () => {
-    try {
-        const response = await getAllHistory();
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching all expense history:", error);
-        throw error;
-    }
-};
-
- */
