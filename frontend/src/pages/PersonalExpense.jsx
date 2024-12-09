@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { AddPersonalExpense } from '../services/personalExpenseService.js';
+import React, {useEffect, useState} from 'react';
+import {AddPersonalExpense, getPersonalExpense, getPersonalHistory} from '../services/personalExpenseService.js';
 
 const PersonalExpense = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,6 +17,9 @@ const PersonalExpense = () => {
     const categories = ['Tour', 'Party', 'House Rent', 'Electricity', 'Groceries', 'Food', 'Health', 'Transportation', 'Education', 'Other'];
     const paymentMethods = ['Cash', 'Credit Card', 'Debit Card', 'Net Banking', 'UPI', 'Other'];
     const recurrencePeriods = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
+    const [balance,setBalance] = useState();
+    const [historyModalOpen, setHistoryModalOpen] = useState(false);
+    const [selectedPersonalHistory, setSelectedPersonalHistory] = useState([]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -59,6 +62,40 @@ const PersonalExpense = () => {
         }
     };
 
+    const fetchBalance = async() => {
+        try{
+            const response = await getPersonalExpense();
+            setBalance(response.data.total);
+        }catch(error){
+            console.error('Error in getting balance:',error);
+        }
+    }
+
+    const fetchHistory = async () => {
+        try {
+
+            const response = await getPersonalHistory();
+
+            if (Array.isArray(response.data.expenses)) {
+                setSelectedPersonalHistory(response.data.expenses);
+            } else {
+                setSelectedPersonalHistory([]);
+            }
+            // Open the history modal
+            setHistoryModalOpen(true);
+
+        } catch (error) {
+            console.error('Error fetching personal history:', error);
+            setSelectedPersonalHistory([]);
+        }
+    };
+
+    useEffect(() => {
+        fetchBalance();
+    }, );
+
+
+
     return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white flex flex-col items-center p-4">
             <h1 className="text-2xl font-bold mb-6">Personal Expense Tracker</h1>
@@ -69,6 +106,16 @@ const PersonalExpense = () => {
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none"
             >
                 Add Personal Expense
+            </button>
+
+
+            <h2 className="text-2xl text-white mt-12">Total Expense:
+                ₹ {balance !== undefined ? balance : "Loading..."} </h2>
+            <button
+                onClick={() => fetchHistory()}
+                className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none mt-24"
+            >
+                View History
             </button>
 
             {/* Modal */}
@@ -203,7 +250,7 @@ const PersonalExpense = () => {
                             ></textarea>
                         </div>
 
-                        {/* Modal Actions */}
+
                         <div className="flex justify-end gap-4">
                             <button
                                 onClick={() => setIsModalOpen(false)}
@@ -217,6 +264,74 @@ const PersonalExpense = () => {
                             >
                                 Add Expense
                             </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {historyModalOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+                        {/* Close Button */}
+                        <button
+                            className="absolute top-4 right-4 bg-red-500 text-white py-1 px-2 rounded-full"
+                            onClick={() => setHistoryModalOpen(false)}
+                        >
+                            ×
+                        </button>
+
+                        {/* Modal Header */}
+                        <h2 className="text-2xl font-bold mb-4 text-center">
+                             Perosnal Expense History
+                        </h2>
+
+                        {/* Expense History Cards */}
+                        <div className="space-y-4 max-h-96 overflow-y-auto">
+                            {selectedPersonalHistory.length > 0 ? (
+                                selectedPersonalHistory.map((expense) => (
+                                    <div
+                                        key={expense._id}
+                                        className="border rounded-lg p-4 shadow-md bg-gray-50"
+                                    >
+
+                                        <p className="text-gray-600">
+                                            <span className="font-bold">Amount:</span> ₹{expense.amount}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span className="font-bold">Message:</span> {expense.message}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span className="font-bold">Category:</span> {expense.category}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span className="font-bold">Payment Method:</span> {expense.paymentMethod}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span
+                                                className="font-bold">Is Recurring:</span> {expense.isRecurring === true ? "Yes" : "No"}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span
+                                                className="font-bold">Recurrence Period:</span> {expense.recurrencePeriod}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span
+                                                className="font-bold">Tags:</span> {expense.tags}
+                                        </p>
+                                        <p className="text-gray-600">
+                                            <span
+                                                className="font-bold">Notes:</span> {expense.notes}
+                                        </p>
+
+                                        <p className="text-gray-600">
+                                            <span
+                                                className="font-bold">Date:</span> {new Date(expense.createdAt).toLocaleString()}
+                                        </p>
+                                    </div>
+                                ))
+                            ) : (
+                                <p className="text-gray-500 italic">No history available.</p>
+                            )}
                         </div>
                     </div>
                 </div>

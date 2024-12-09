@@ -60,7 +60,7 @@ export const closeNotification = (responseData) => API.post("/notify/notificatio
 
 // personal expense
 export const addPersonalExpense = (expenseData) => API.post("/personal/addExpense",expenseData);
-export const getPersonalExpenseHistory = () => API.post('/personal/history');
-export const getTotalPersonalExpense = () => API.post('/personal/total');
+export const getPersonalExpenseHistory = () => API.get('/personal/history');
+export const getTotalPersonalExpense = () => API.get('/personal/total');
 export const getExpensesByCategory = () => API.post('/personal/category-summary');
 export const getMonthlyExpenseSummary = () => API.post('/personal/monthly-summary');

@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const PersonalExpense = require("../models/PersonalExpense");
+const mongoose = require('mongoose');
 
 exports.addPersonalExpense = async (req, res) => {
     try {
@@ -36,7 +37,7 @@ exports.addPersonalExpense = async (req, res) => {
 
 exports.getPersonalExpenseHistory = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user._id;
         const { category, startDate, endDate, tags } = req.query;
 
         const query = { userId };
@@ -52,6 +53,7 @@ exports.getPersonalExpenseHistory = async (req, res) => {
         }
 
         const expenses = await PersonalExpense.find(query).sort({ createdAt: -1 });
+
         res.status(200).json({ message: 'Expenses retrieved successfully', expenses });
     } catch (error) {
         console.error('Error fetching personal expense history:', error);
@@ -62,10 +64,10 @@ exports.getPersonalExpenseHistory = async (req, res) => {
 
 exports.getTotalPersonalExpense = async (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user._id;
 
         const totalSpent = await PersonalExpense.aggregate([
-            { $match: { userId: mongoose.Types.ObjectId(userId) } },
+            { $match: { userId: new mongoose.Types.ObjectId(userId) } },
             { $group: { _id: null, total: { $sum: "$amount" } } }
         ]);
 
