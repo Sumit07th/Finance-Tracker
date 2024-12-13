@@ -11,4 +11,11 @@ router.post('/logout',authenticateToken, authController.logout);
 
 router.post('/changed-password',authenticateToken,authController.changePassword)
 
+router.post('/addIncome',authenticateToken, authController.addIncome);
+
+router.put('/updateIncome',authenticateToken, authController.updateIncome);
+
+router.get('/getIncome',authenticateToken, authController.getIncome);
+
+
 module.exports = router;

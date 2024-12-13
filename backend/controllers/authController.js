@@ -87,3 +87,76 @@ exports.changePassword = async (req, res) => {
         message: 'Password changed successfully',
     });
 };
+
+// Add income to the user
+exports.addIncome = async (req, res) => {
+    try {
+        const { income } = req.body;
+        const userId = req.user._id;
+
+        if (!income) {
+            return res.status(400).json({ message: 'Income is required' });
+        }
+
+        // Update the user's income
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.income = income;
+        await user.save();
+
+        res.status(200).json({ message: 'Income added successfully', income: user.income });
+    } catch (error) {
+        console.error('Error adding income:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+
+// Update income for the user
+exports.updateIncome = async (req, res) => {
+    try {
+        const { income } = req.body;
+        const userId = req.user._id;
+
+        if (!income) {
+            return res.status(400).json({ message: 'Income is required' });
+        }
+
+        // Find and update the user's income
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        user.income = income;
+        await user.save();
+
+        res.status(200).json({ message: 'Income updated successfully', income: user.income });
+    } catch (error) {
+        console.error('Error updating income:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+
+
+// Get income for the user
+exports.getIncome = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // Find the user by ID
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({ income: user.income });
+    } catch (error) {
+        console.error('Error fetching income:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+

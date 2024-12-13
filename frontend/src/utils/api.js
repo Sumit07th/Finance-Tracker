@@ -26,6 +26,9 @@ export const registerUser = (userdata) => API.post("/auth/register", userdata);
 export const loginUser = (userdata) => API.post("/auth/login", userdata);
 export const logoutUser = () => API.post("/auth/logout");
 export const changedPassword = ({oldPassword,newPassword}) => API.post("/auth/changed-password", {oldPassword,newPassword});
+export const addIncome = ({income}) => API.post("/auth/addIncome", {income});
+export const updateIncome = ({income}) => API.put("/auth/updateIncome", {income});
+export const getIncome = () => API.get("/auth/getIncome");
 
 // Group ke liye
 

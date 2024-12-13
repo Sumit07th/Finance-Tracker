@@ -1,4 +1,12 @@
-import {registerUser,loginUser,logoutUser,changedPassword} from "../utils/api.js";
+import {
+    registerUser,
+    loginUser,
+    logoutUser,
+    changedPassword,
+    addIncome,
+    updateIncome,
+    getIncome
+} from "../utils/api.js";
 
 
 // Register a new user
@@ -41,11 +49,37 @@ export const logout = async () => {
 
 export const change = async ({oldPassword,newPassword}) => {
     try{
-        console.log({oldPassword,newPassword});
         const response = await changedPassword({oldPassword,newPassword});
         return response.data;
     }catch(error){
         console.error("Error Change Password",error);
+    }
+}
+
+export const addPersonalIncome = async ({income}) => {
+    try{
+        const response = await addIncome({income});
+        return response.data;
+    }catch(error){
+        console.error("Error add Income",error);
+    }
+}
+
+export const updatePersonalIncome = async ({income}) => {
+    try{
+        const response = await updateIncome({income});
+        return response.data;
+    }catch(error){
+        console.error("Error update Income",error);
+    }
+}
+
+export const getPersonalIncome = async () => {
+    try{
+        const response = await getIncome();
+        return response;
+    }catch(error){
+        console.error("Error fetch Income",error);
     }
 }
 

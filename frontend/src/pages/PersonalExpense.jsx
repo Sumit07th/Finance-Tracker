@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {AddPersonalExpense, getPersonalExpense, getPersonalHistory} from '../services/personalExpenseService.js';
+import {getPersonalIncome} from "../services/authService.js";
 
 const PersonalExpense = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,6 +21,7 @@ const PersonalExpense = () => {
     const [balance,setBalance] = useState();
     const [historyModalOpen, setHistoryModalOpen] = useState(false);
     const [selectedPersonalHistory, setSelectedPersonalHistory] = useState([]);
+    const [income,setIncome] = useState();
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -27,6 +29,17 @@ const PersonalExpense = () => {
             ...expenseData,
             [name]: type === 'checkbox' ? checked : value
         });
+    };
+
+    // Fetch income from the backend
+    const fetchIncome = async () => {
+        try {
+
+            const response = await getPersonalIncome();
+            setIncome(response?.data?.income || 0);
+        } catch (error) {
+            console.error('Error fetching income:', error);
+        }
     };
 
     const handleAddExpense = async () => {
@@ -92,7 +105,8 @@ const PersonalExpense = () => {
 
     useEffect(() => {
         fetchBalance();
-    }, );
+        fetchIncome();
+    }, []);
 
 
 
@@ -108,9 +122,13 @@ const PersonalExpense = () => {
                 Add Personal Expense
             </button>
 
+            <h2 className="text-2xl text-white mt-12">Total Income:
+                ₹ {income !== undefined ? income : "Loading..."} </h2>
 
             <h2 className="text-2xl text-white mt-12">Total Expense:
                 ₹ {balance !== undefined ? balance : "Loading..."} </h2>
+
+
             <button
                 onClick={() => fetchHistory()}
                 className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none mt-24"
@@ -282,7 +300,7 @@ const PersonalExpense = () => {
 
                         {/* Modal Header */}
                         <h2 className="text-2xl font-bold mb-4 text-center">
-                             Perosnal Expense History
+                            Perosnal Expense History
                         </h2>
 
                         {/* Expense History Cards */}

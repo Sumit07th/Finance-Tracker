@@ -46,7 +46,7 @@ exports.getUserNotifications = async (req, res) => {
             .populate('senderId', 'username email')
             .populate('groupId', 'name')
             .sort({ createdAt: -1 });
-        console.log("notifications is ", notifications)
+
 
         res.status(200).json({ notifications });
     } catch (error) {
