@@ -1,8 +1,8 @@
 import axios from 'axios';
-const BASE_URL = "https://finance-tracker-six-eta.vercel.app";
+const BASE_URI = "https://finance-tracker-six-eta.vercel.app";
 
 const API = axios.create({
-    baseURL: BASE_URL,
+    baseURL: BASE_URI,
     timeout: 100000,
     headers: {
         "Content-Type": "application/json"
